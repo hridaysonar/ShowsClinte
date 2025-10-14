@@ -1,0 +1,20 @@
+.swiper-button-prev,
+.swiper-button-next {
+    color: white !important;
+    z-index: 10 !important;
+    transition: all 0.3s ease;
+}
+
+.swiper-button-prev:hover,
+.swiper-button-next:hover {
+    color: #86efac !important; /* Light green on hover */
+}
+
+.swiper-pagination-bullet {
+    background: white !important;
+    opacity: 0.8;
+}
+
+.swiper-pagination-bullet-active {
+    background: #86efac !important;
+}
