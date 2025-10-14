@@ -118,9 +118,9 @@ const CartPage = () => {
                   {item.description || "No description available."}
                 </p>
 
-                <p className="text-red-600 font-bold text-xl mb-2">
+                {/* <p className="text-red-600 font-bold text-xl mb-2">
                   ৳ {price.toLocaleString()}
-                </p>
+                </p> */}
 
                 <div className="text-sm text-gray-700 space-y-1">
                   <p>
@@ -236,7 +236,7 @@ const CartPage = () => {
                       type="submit"
                       className="w-full bg-green-600 text-white py-2 rounded-lg font-semibold hover:bg-green-700 transition"
                     >
-                      Confirm Order
+                      Confirm Order(Cash On Delivery)
                     </button>
                   </form>
                 </div>
