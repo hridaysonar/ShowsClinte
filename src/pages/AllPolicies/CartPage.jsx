@@ -50,7 +50,7 @@ const CartPage = () => {
         createdAt: new Date(),
       };
 
-      await axios.post("http://localhost:3000/orders", orderData);
+      await axios.post("https://servers003.vercel.app/orders", orderData);
       alert("✅ Order placed successfully!");
       setOpenFormId(null);
       setFormData({

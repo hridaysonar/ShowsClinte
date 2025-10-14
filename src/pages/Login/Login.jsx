@@ -15,7 +15,7 @@ const Login = () => {
   const { signIn, signInWithGoogle, loading, setLoading } = useAuth();
   const navigate = useNavigate();
 
-  // ✅ Common function: save email in localStorage and save user to DB
+  // ✅ Common success handler (both normal + google login)
   const handleLoginSuccess = async (user) => {
     const userData = {
       name: user?.displayName || "Anonymous",
@@ -24,24 +24,34 @@ const Login = () => {
     };
 
     if (user?.email) {
-      // ✅ Save email locally for Cart system
       localStorage.setItem("userEmail", user.email);
+
+      // ✅ Step 1: Generate JWT and set cookie
+      await fetch("https://servers003.vercel.app/jwt", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: user.email }),
+        credentials: "include", // ✅ send cookies
+      });
+
+      // ✅ Step 2: Save user in DB
+      await saveUserInDb(userData);
     }
 
-    // ✅ Save in DB
-    await saveUserInDb(userData);
-
+    // ✅ Step 3: Sweet Success Alert
     Swal.fire({
-      title: "Login Successful!",
+      title: "Welcome Back!",
+      text: `${user?.displayName || "You"} logged in successfully 🎉`,
       icon: "success",
-      timer: 1500,
+      confirmButtonColor: "#3085d6",
+      background: "#f0f9ff",
+      color: "#333",
+      timer: 2000,
       showConfirmButton: false,
-    });
-
-    navigate("/");
+    }).then(() => navigate("/"));
   };
 
-  // 🔹 Email/password login
+  // 🔹 Email/Password Login
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -52,26 +62,36 @@ const Login = () => {
     } catch (err) {
       console.error("Login error:", err);
       setError("Invalid email or password.");
-      Swal.fire({ title: "Login Failed!", icon: "error" });
+      Swal.fire({
+        icon: "error",
+        title: "Login Failed!",
+        text: "Please check your credentials and try again.",
+      });
       setLoading(false);
     }
   };
 
-  // 🔹 Google login
+  // 🔹 Google Login (Fixed version)
   const handleGoogleLogin = async () => {
     setError("");
     try {
       setLoading(true);
       const result = await signInWithGoogle();
-      await handleLoginSuccess(result.user);
+
+      if (result?.user?.email) {
+        await handleLoginSuccess(result.user);
+      } else {
+        throw new Error("Google login returned empty user");
+      }
     } catch (err) {
       console.error("Google login error:", err);
       setError("Google login failed.");
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: "Google login failed!",
+        text: "Google login failed! Please try again.",
       });
+    } finally {
       setLoading(false);
     }
   };
@@ -84,7 +104,9 @@ const Login = () => {
 
       <div className="min-h-screen flex items-center justify-center py-12 px-4">
         <div className="w-full max-w-md bg-base-100 border rounded-xl p-8 shadow-md transition-transform duration-300 hover:-translate-y-2 hover:shadow-2xl">
-          <h2 className="text-3xl font-bold text-center mb-6">Login Please</h2>
+          <h2 className="text-3xl font-bold text-center mb-6">
+            Login to Your Account
+          </h2>
 
           {error && (
             <div className="alert alert-error mb-4">
@@ -92,14 +114,13 @@ const Login = () => {
             </div>
           )}
 
+          {/* Email/Password Login */}
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Email */}
             <div>
-              <label className="label" htmlFor="email">
+              <label className="label">
                 <span className="label-text">Email Address</span>
               </label>
               <input
-                id="email"
                 type="email"
                 placeholder="Enter your email"
                 className="input input-bordered w-full"
@@ -109,14 +130,12 @@ const Login = () => {
               />
             </div>
 
-            {/* Password */}
             <div>
-              <label className="label" htmlFor="password">
+              <label className="label">
                 <span className="label-text">Password</span>
               </label>
               <div className="relative">
                 <input
-                  id="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter your password"
                   className="input input-bordered w-full pr-10"
@@ -134,7 +153,6 @@ const Login = () => {
               </div>
             </div>
 
-            {/* Remember + Forgot */}
             <div className="flex items-center justify-between text-sm">
               <label className="flex items-center gap-2">
                 <input type="checkbox" className="checkbox checkbox-sm" />
@@ -149,7 +167,6 @@ const Login = () => {
               </Link>
             </div>
 
-            {/* Submit */}
             <button
               type="submit"
               className="btn btn-primary w-full"
@@ -176,7 +193,7 @@ const Login = () => {
           </button>
 
           <p className="mt-6 text-center text-sm">
-            Don't have an account?{" "}
+            Don’t have an account?{" "}
             <Link to="/signup" className="link link-neutral font-bold">
               Register now
             </Link>
