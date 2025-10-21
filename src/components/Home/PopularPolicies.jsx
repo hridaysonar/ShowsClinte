@@ -134,7 +134,7 @@ const PopularPolicies = () => {
                 </div>
 
                 <p className="text-xs text-gray-400 mt-1">
-                  {policy.purchaseCount || 0} sold
+                  {policy.purchaseCount || ''} 
                 </p>
               </div>
             </Link>

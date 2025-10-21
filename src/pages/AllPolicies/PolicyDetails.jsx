@@ -131,7 +131,7 @@ const PolicyDetails = () => {
         {/* RIGHT */}
         <div className="space-y-4">
           <p className="text-xs uppercase text-gray-500">
-            {product.brand || "Nawabi Shoes BD"}
+            {product.brand || ""}
           </p>
           <h1 className="text-3xl font-bold text-gray-900">{product.title}</h1>
 
@@ -152,7 +152,7 @@ const PolicyDetails = () => {
           <div>
             <h3 className="text-sm font-semibold mb-2">Shoe Size</h3>
             <div className="flex gap-2 flex-wrap">
-              {["39", "40", "41", "42", "43", "44"].map((s) => (
+              {[ "40", "41", "42", "43", "44"].map((s) => (
                 <button
                   key={s}
                   onClick={() => setSelectedSize(s)}
