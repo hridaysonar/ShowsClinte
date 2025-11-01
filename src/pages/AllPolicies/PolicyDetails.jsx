@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { useParams } from "react-router";
+import { useParams } from "react-router"; // ✅ react-router-dom
 import { useQuery } from "@tanstack/react-query";
 import { axiosSecure } from "../../hooks/useAxiosSecure";
 import { useCart } from "../../context/CartContext";
 import { Star } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
+
 
 const PolicyDetails = () => {
   const { id } = useParams();
@@ -12,7 +13,6 @@ const PolicyDetails = () => {
 
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedSize, setSelectedSize] = useState("");
-  const [selectedColor, setSelectedColor] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [showForm, setShowForm] = useState(false);
 
@@ -65,7 +65,6 @@ const PolicyDetails = () => {
     const orderData = {
       ...formData,
       shoeSize: selectedSize,
-      color: selectedColor,
       quantity,
       modelSKU: product._id,
       productTitle: product.title,
@@ -130,9 +129,7 @@ const PolicyDetails = () => {
 
         {/* RIGHT */}
         <div className="space-y-4">
-          <p className="text-xs uppercase text-gray-500">
-            {product.brand || ""}
-          </p>
+          <p className="text-xs uppercase text-gray-500">{product.brand || ""}</p>
           <h1 className="text-3xl font-bold text-gray-900">{product.title}</h1>
 
           {/* Ratings */}
@@ -152,35 +149,17 @@ const PolicyDetails = () => {
           <div>
             <h3 className="text-sm font-semibold mb-2">Shoe Size</h3>
             <div className="flex gap-2 flex-wrap">
-              {[ "40", "41", "42", "43", "44"].map((s) => (
+              {["40", "41", "42", "43", "44"].map((s) => (
                 <button
                   key={s}
                   onClick={() => setSelectedSize(s)}
                   className={`px-4 py-2 border rounded ${
-                    selectedSize === s ? "bg-black text-white" : "border-gray-300 hover:border-black"
+                    selectedSize === s
+                      ? "bg-black text-white"
+                      : "border-gray-300 hover:border-black"
                   }`}
                 >
                   {s}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Color */}
-          <div>
-            <h3 className="text-sm font-semibold mb-2">Color</h3>
-            <div className="flex gap-2 flex-wrap">
-              {["Black", "White", "Brown", "Blue", "Gray", "Red"].map((c) => (
-                <button
-                  key={c}
-                  onClick={() => setSelectedColor(c)}
-                  className={`px-4 py-2 border rounded ${
-                    selectedColor === c
-                      ? "bg-gray-900 text-white"
-                      : "border-gray-300 hover:border-gray-700"
-                  }`}
-                >
-                  {c}
                 </button>
               ))}
             </div>
@@ -209,7 +188,7 @@ const PolicyDetails = () => {
           {/* Buttons */}
           <div className="space-y-3 pt-4">
             <button
-              onClick={() => addToCart(product, selectedSize, selectedColor, quantity)}
+              onClick={() => addToCart(product, selectedSize, null, quantity)}
               className="w-full border border-red-600 text-red-600 py-3 rounded-lg hover:bg-red-600 hover:text-white transition"
             >
               Add to Cart
@@ -238,9 +217,7 @@ const PolicyDetails = () => {
       {/* ✅ Inline Form */}
       {showForm && (
         <div className="mt-10 bg-gray-50 p-6 rounded-2xl shadow-lg max-w-2xl mx-auto border">
-          <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
-            Complete Your Order
-          </h2>
+          <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Complete Your Order</h2>
           <form onSubmit={handleOrderSubmit} className="space-y-4">
             <input
               type="text"

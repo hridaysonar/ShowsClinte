@@ -1,14 +1,14 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { axiosSecure } from "../hooks/useAxiosSecure"; // তোমার axios hook
+import { axiosSecure } from "../hooks/useAxiosSecure";
 
 const CartContext = createContext();
 export const useCart = () => useContext(CartContext);
 
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
-  const userEmail = localStorage.getItem("userEmail"); // login এর পর সেভ করা ইমেইল ধরো
+  const userEmail = localStorage.getItem("userEmail"); // login এর পর সেভ করা ইমেইল
 
-  // 🔹 Load cart from backend
+  // 📥 Load cart from backend
   useEffect(() => {
     if (userEmail) {
       axiosSecure
@@ -18,15 +18,14 @@ export const CartProvider = ({ children }) => {
     }
   }, [userEmail]);
 
-  // ➕ Add item to cart
-  const addToCart = async (product, size, color, quantity = 1) => {
+  // ➕ Add item to cart (Color ছাড়াই)
+  const addToCart = async (product, size, _colorIgnored = null, quantity = 1) => {
     if (!userEmail) {
       alert("Please login first!");
       return;
     }
-
-    if (!size || !color) {
-      alert("Please select Size and Color!");
+    if (!size) {
+      alert("Please select Size!");
       return;
     }
 
@@ -34,10 +33,11 @@ export const CartProvider = ({ children }) => {
       email: userEmail,
       productId: product._id,
       title: product.title,
-      price: product.price || product.coverageRange,
+      // price number না হলে backend coverageRange থেকে বের করবে
+      price: product.price,
+      coverageRange: product.coverageRange,
       image: product.image,
       size,
-      color,
       quantity,
     };
 

@@ -5,7 +5,7 @@ import axios from "axios";
 
 const CartPage = () => {
   const { cart, removeFromCart, clearCart } = useCart();
-  const [openFormId, setOpenFormId] = useState(null); // ✅ কোন আইটেমে ফর্ম ওপেন আছে ট্র্যাক করবে
+  const [openFormId, setOpenFormId] = useState(null);
   const [formData, setFormData] = useState({
     fullName: "",
     phone: "",
@@ -27,24 +27,22 @@ const CartPage = () => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  // ✅ Handle Order Submission
   const handleOrderSubmit = async (e, item) => {
     e.preventDefault();
     try {
+      const unitPrice =
+        typeof item.price === "number" && item.price > 0
+          ? item.price
+          : extractPrice(item.coverageRange);
+
       const orderData = {
         ...formData,
         productId: item.productId,
         title: item.title,
         image: item.image,
         quantity: item.quantity,
-        price:
-          item.price && item.price > 0
-            ? item.price
-            : extractPrice(item.coverageRange),
-        total:
-          (item.price && item.price > 0
-            ? item.price
-            : extractPrice(item.coverageRange)) * item.quantity,
+        price: unitPrice,
+        total: unitPrice * item.quantity,
         status: "Pending",
         email: formData.email,
         createdAt: new Date(),
@@ -127,10 +125,8 @@ const CartPage = () => {
                     <span className="font-semibold">Size:</span>{" "}
                     {item.size || "N/A"}
                   </p>
-                  <p>
-                    <span className="font-semibold">Color:</span>{" "}
-                    {item.color || "N/A"}
-                  </p>
+                  {/* Color বাদ */}
+                  {/* <p><span className="font-semibold">Color:</span> {item.color || "N/A"}</p> */}
                   <p>
                     <span className="font-semibold">Quantity:</span>{" "}
                     {item.quantity}
@@ -141,9 +137,7 @@ const CartPage = () => {
               {/* Action Buttons */}
               <div className="mt-4 flex justify-between items-center border-t pt-3">
                 <button
-                  onClick={() =>
-                    removeFromCart(item._id, item.size, item.color)
-                  }
+                  onClick={() => removeFromCart(item._id)} // ✅ শুধু id
                   className="flex items-center gap-2 text-red-600 hover:text-red-700 font-medium transition"
                 >
                   <FaTrash /> Remove
