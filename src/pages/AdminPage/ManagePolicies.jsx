@@ -598,12 +598,13 @@ const FoodModal = ({ isOpen, onClose, initial, onSubmit, isMutating }) => {
               <textarea name="description" value={form.description} onChange={handle} rows="2" className="w-full px-4 py-2 border rounded-lg" placeholder="Description" required />
               <select name="nutType" value={form.nutType} onChange={handle} className="w-full px-4 py-2 border rounded-lg" required>
                 <option value="">-- Select Nut --</option>
-                <option value="almond">Almond</option>
-                <option value="cashew">Cashew</option>
-                <option value="peanut">Peanut</option>
-                <option value="pistachio">Pistachio</option>
-                <option value="walnut">Walnut</option>
-                <option value="hazelnut">Hazelnut</option>
+                <option value="almond">Medjool Dates(মেডজুল খেজুর)</option>
+                <option value="cashew"> Ajwa Dates(আজওয়া খেজুর)</option>
+                <option value="peanut">Kamranga Morium Dates(কামরাঙ্গা মরিয়ম খেজুর)</option>
+                <option value="pistachio">Sukkari Dates(সুক্কারি খেজুর)</option>
+                <option value="walnut">Mabrum Dates (A Grade)</option>
+                <option value="hazelnut">Others Organic Foods( অন্যান্য অর্গানিক খাবার)
+</option>
               </select>
               <div className="grid grid-cols-2 gap-3">
                 <input type="number" name="qtyKg" value={form.qtyKg} onChange={handle} min="1" className="px-4 py-2 border rounded-lg" placeholder="Qty (kg)" required />
